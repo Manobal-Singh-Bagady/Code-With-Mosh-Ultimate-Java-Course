@@ -28,12 +28,12 @@ public class MortgageCalculator {
         System.out.println("--------------------------------------");
 
         // Get the input
-        long principal = (long) takeInput("Enter the Principal amount($1K - $1M): ", 1000, 1_000_000);
+        int principal = (int) takeInput("Enter the Principal amount($1K - $1M): ", 1000, 1_000_000);
         float annualInterestRate = takeInput("Enter the Annual Interest Rate: ", 1, 30);
-        short period = (short) takeInput("Enter the Period (in Years):", 1, 30);
+        byte period = (byte) takeInput("Enter the Period (in Years):", 1, 30);
 
         // Calculate the mortgage
-        String result = CalculateMortgage(principal, annualInterestRate, period);
+        String result = calculateMortgage(principal, annualInterestRate, period);
 
         // Display the result
         System.out.printf("Mortgage: %s\n", result);
@@ -47,20 +47,20 @@ public class MortgageCalculator {
      * <strong>Takes input from user with error handling.</strong>
      *
      * @param message message to print while taking input
-     * @param from    lowest input value
-     * @param to      highest input value
+     * @param min     minimum permissible input value
+     * @param max     maximum permissible input value
      * @return Input from the user
      */
-    private static float takeInput(String message, long from, long to) {
+    private static float takeInput(String message, int min, int max) {
         float input;
+
+        // take input from user until he enters the correct value
         while (true) {
             System.out.print(message);
             input = sc.nextFloat();
-            if (input <= to && input >= from) {
-                break;
-            } else {
-                System.out.printf("Enter a value from %d to %d\n", from, to);
-            }
+
+            if (input >= min && input <= max) break;
+            System.out.printf("Enter a value from %d to %d\n", min, max);
         }
         return input;
     }
@@ -74,16 +74,16 @@ public class MortgageCalculator {
      * @param period             Period in years.
      * @return The calculated mortgage.
      */
-    private static String CalculateMortgage(long principal, float annualInterestRate, short period) {
+    private static String calculateMortgage(int principal, float annualInterestRate, byte period) {
         // Conversion for calculations.
-        int n = period * MONTHS_IN_YEAR;
-        double r = annualInterestRate / PERCENT / MONTHS_IN_YEAR;
-        double ratePowered = Math.pow((1 + r), n);
+        float rateOfInterest = annualInterestRate / PERCENT / MONTHS_IN_YEAR;
+        short numberOfPayments = (short) (period * MONTHS_IN_YEAR);
+        double ratePoweredToN = Math.pow((1 + rateOfInterest), numberOfPayments);
 
         // calculate the mortgage
-        double mortgage = principal * (r * ratePowered / (ratePowered - 1));
+        double mortgage = principal * (rateOfInterest * ratePoweredToN / (ratePoweredToN - 1));
 
-        // format the mortgage to currency format and return.
+        // format the mortgage to the currency format and return.
         return NumberFormat.getCurrencyInstance().format(mortgage);
     }
 }
