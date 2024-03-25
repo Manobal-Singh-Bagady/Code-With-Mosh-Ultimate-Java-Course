@@ -10,8 +10,8 @@ class MortgageCalculator {
 
     MortgageCalculator(int principal, double annualInterestRate, byte period) {
         this.principal = principal;
-        monthlyInterest = annualInterestRate / PERCENT / MONTHS_IN_YEAR;
-        numberOfPayments = (short) (period * MONTHS_IN_YEAR);
+        this.monthlyInterest = annualInterestRate / PERCENT / MONTHS_IN_YEAR;
+        this.numberOfPayments = (short) (period * MONTHS_IN_YEAR);
     }
 
     /**
